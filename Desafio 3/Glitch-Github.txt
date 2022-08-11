@@ -1,0 +1,5 @@
+Glitch code :https://glitch.com/edit/#!/desafio3-josepardo
+Glitch site productos: https://desafio3-josepardo.glitch.me/productos
+Glitch site productoRandom: https://desafio3-josepardo.glitch.me/productoRandom
+
+Github: https://github.com/JosePardoD/CH-Backend
