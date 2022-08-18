@@ -1,0 +1,26 @@
+html
+    head
+        title='test pug'
+        style
+            include styles.css
+    body
+        h1=title
+        p 
+            a(href="http://localhost:8080/form")='formulario'  
+        p 
+            a(href="http://localhost:8080/products")='pruductos'  
+        div
+        
+        table(style='width:100%', border='1')
+            tr
+                th Nombre 
+                th Precio 
+                th Foto
+            for item in products
+                tr
+                    td #{p=item.name}
+                    td #{p=item.price}
+                    td(scope="row")
+                        img(src= item.thumbnail)
+                    
+                    

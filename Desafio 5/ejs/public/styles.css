@@ -1,0 +1,34 @@
+.footer {
+  color: blue;
+}
+
+.product-img {
+  width: 300px;
+  max-width: 300px;
+  height: 200px;
+  max-height: 200px;
+}
+
+h1 {
+  font-family: serif;
+  color: blue;
+}
+
+.product{
+  font-family: serif;
+  font-size: 15px;
+  color: grey;
+}
+
+table {
+  width: 100%;
+}
+
+table, th, td {
+  border: 1px solid lightgrey;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 2px 4px;
+}

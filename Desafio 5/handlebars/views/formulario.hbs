@@ -1,0 +1,19 @@
+{{> navbar}}
+<br/>
+
+<h1>Ingrese Producto</h1>
+        
+        <div class="product">
+            <form method="post" action="/products">
+                <h2>Nombre</h2>
+                <input type="text" name="title" id="title" >
+                <h2>Precio</h2>
+                <input type="text" name="price" id="price">
+                <h2>Foto URL</h2>
+                <input type="text" name="thumbnail" id="thumbnail">
+                <input type="submit" value="Enviar ">
+            </form>
+        </div>
+<br/>
+{{> footer}}
+<br/>

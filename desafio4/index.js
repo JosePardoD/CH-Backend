@@ -3,7 +3,7 @@ const { Router } = express;
 
 const app = express();
 const router = Router();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 const server = app.listen(PORT, () => {
   console.log(`Servidor http escuchando en el puerto ${server.address().port}`);
@@ -19,118 +19,106 @@ app.use('/api/products', router);
 
 //DEV
 
-let productsHC = [
-  { id: 1, title: 'audifonos', price: 550, thumbnail: 'http://localhost:8080/public/audifonos.png' },
-  { id: 2, title: 'teclado', price: 820, thumbnail: 'http://localhost:8080/public/teclado.jpg' },
-  { id: 3, title: 'mouse', price: 340, thumbnail: 'http://localhost:8080/public/mouse.jpg' },
-];
 
-class Products {
-  constructor(products) {
-    this.products = [...products];
-    //this.products = products;
+
+class Products{
+
+  constructor(nombreArchivo){
+      this.nombreArchivo= "./"+nombreArchivo+".json";
   }
 
-  getAll() {
-    return this.products;
-  }
-  findOne(id) {
-    return this.products.find((item) => item.id == id);
-  }
-  addOne(product) {
-    const lastItem = this.products[this.products.length - 1];
-    let lastId = 1;
-    if (lastItem) {
-      lastId = lastItem.id + 1;
-    }
-    product.id = lastId;
-    this.products.push(product);
-    return this.products[this.products.length - 1];
-  }
-
-  updateOne(id, product) {
-    const productToInsert = { ...product, id };
-
-    for (let i = 0; i < this.products.length; i++) {
-      if (this.products[i].id == id) {
-        this.products[i] = productToInsert;
-        return productToInsert;
+  async getData(){
+      try {
+          return  await fs.promises.readFile(this.nombreArchivo,"utf8")    
+      } catch (error){
+          if(error.code == "ENOENT"){
+              fs.writeFile(this.nombreArchivo,"[]",(error)=>{
+                  if(error){
+                      console.log("El archivo no se pudo crear");
+                  }
+              })
+          }
       }
-    }
-    return undefined;
+      
   }
-  deleteOne(id) {
-    const foundProduct = this.findOne(id);
-    if (foundProduct) {
-      this.products = this.products.filter((item) => item.id != id);
-      return id;
-    }
-    return undefined;
+
+  async getAll(){
+      const data= await this.getData();
+      return JSON.parse(data);
   }
+
+  async addOne(objeto){
+      try {
+      let contenidoObjeto=await this.getData();
+      let contenidoObjetoJson=JSON.parse(contenidoObjeto);
+      let arreglo = [];
+      const indice =contenidoObjetoJson.map(x=>x.id).sort();
+      objeto.id=indice[indice.length-1]+1;
+
+      if(!objeto.id){
+          objeto.id=1
+          arreglo=[{...objeto}];
+          await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(arreglo));
+          return arreglo[0].id;
+      }
+
+      contenidoObjetoJson.push(objeto);
+      
+
+      await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(contenidoObjetoJson));
+
+  } catch (error) {
+          console.log("No se pudo grabar el archivo");
+  }
+  }
+
+  async getById(numero){
+      try{
+      let contenidoObjeto=await this.getData();
+      let contenidoObjetoJson=JSON.parse(contenidoObjeto);
+      
+      const indice =contenidoObjetoJson.map(x=>x.id);
+      const arreglo = Object.values(indice);
+      const maxId = Math.max(...arreglo)
+      let y=1; //bandera
+      
+
+      if(maxId>=numero){ 
+          for (let i = 0 ;i< indice.length;i++){
+              if (indice[i]==numero) {
+                  y=0;
+                  console.log(contenidoObjetoJson[i]);
+                  i=indice.length;
+                  
+              }        
+          }
+      }
+      if(y==1){
+          console.log(null);  
+      }
+
+
+      } catch (error) {
+          console.log("No se encontro");   
+      }
+  }
+  async deleteAll(numero){
+      try {
+          return  await fs.promises.writeFile(this.nombreArchivo,"")    
+      } catch (error){
+          console.log("No se borro");
+      }
+  
+  }
+
 }
 
-router.delete('/:id', (req, res) => {
-  let { id } = req.params;
-  const products = new Products(productsHC);
 
-  id = parseInt(id);
 
-  const deletedProduct = products.deleteOne(id);
-  console.log(products.getAll());
-  if (deletedProduct != undefined) {
-    res.json({ success: 'ok', id });
-  } else {
-    res.json({ error: 'producto no encontrado' });
-  }
-});
-
-router.put('/:id', (req, res) => {
-  let { id } = req.params;
-  const { body } = req;
-  id = parseInt(id);
-
-  const products = new Products(productsHC);
-
-  const changedProduct = products.updateOne(id, body);
-
-  if (changedProduct) {
-    res.json({ success: 'ok', new: changedProduct });
-  } else {
-    res.json({ error: 'producto no encontrado' });
-  }
-});
-
-router.post('/', (req, res) => {
-  const { body } = req;
-  body.price = parseFloat(body.price);
-
-  const products = new Products(productsHC);
-  const productoGenerado = products.addOne(body);
-  res.json({ success: 'ok', new: productoGenerado });
-  console.log(productsHC)
-});
-
-router.get('/:id', (req, res) => {
-  let { id } = req.params;
-
-  const products = new Products(productsHC);
-  id = parseInt(id);
-
-  const found = products.findOne(id);
-  if (found) {
-    res.json(found);
-  } else {
-    res.json({ error: 'producto no encontrado' });
-  }
-});
-
-router.get('/', (req, res) => {
+router.get('/form', (req, res) => {
   //const { query } = req;
 
-  const products = new Products(productsHC);
-  res.json(products.getAll());
+  const products = new Products('productos');
+  res.render(products.getAll().then(x=>console.log(JSON.stringify(x))));
 });
 
-app.get('/form', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});

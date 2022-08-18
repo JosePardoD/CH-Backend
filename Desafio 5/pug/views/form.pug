@@ -1,0 +1,20 @@
+html
+    head
+        title='test pug'
+        style
+            include styles.css
+    body
+        h1=title 
+        p 
+            a(href="http://localhost:8080/form")='formulario'  
+        p 
+            a(href="http://localhost:8080/products")='pruductos'  
+        div
+            form(action="/products",method="post")
+                p Nombre 
+                input(type="text", name="title")
+                p Precio
+                input(type="text" ,name="price")
+                p  Foto URL
+                input(type="text" ,name="thumbnail")
+                input(type="submit", value="Subir")
