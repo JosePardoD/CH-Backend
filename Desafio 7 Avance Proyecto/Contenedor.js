@@ -101,6 +101,27 @@ class contenedor{
             console.log("No se actualizo");
         }
     }
+
+    async delete(object){
+        try {
+            object = Number(object);
+            const contenidoObjeto= await this.getData();
+            const contenidoObjetoJson = JSON.parse(contenidoObjeto);
+            const objectDelete= contenidoObjetoJson.find(
+                (producto) => producto.id === object
+            );
+
+            if(objectDelete){
+                const indice = contenidoObjetoJson.indexOf(objectDelete);
+                contenidoObjetoJson.splice(indice,1);
+                await fs.promises.writeFile(this.nombreArchivo, JSON.stringify(contenidoObjetoJson));
+                return true;
+            }
+        } catch (error) {
+            console.log(`No se encuentra ID`)
+        }
+
+    }
 }
 
 module.exports = contenedor

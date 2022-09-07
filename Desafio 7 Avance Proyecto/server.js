@@ -6,6 +6,9 @@ const routerCarrito =express.Router();
 
 const contenedor = require('./Contenedor.js')
 const containerProductos = new contenedor('productos')
+const contenedor2 = require('./Contenedor2.js')
+const containerCarrito = new contenedor2('carrito')
+
 
 
 const PORT = process.env.PORT || 8080;
@@ -70,3 +73,26 @@ routerProductos.put('/:id', async(req, res) => {
 });
 
 /* Delete  Actualizar Producto Especifico del listado  =>  /api/productos/:id  */
+
+
+routerCarrito.post('/', async(req, res) => {
+  const { body } = req;
+  body.timestamp=Date.now();
+  const carritoGenerado = await containerCarrito.save(body);
+  
+  res.json({ success: 'ok', new: carritoGenerado });
+});
+
+
+routerCarrito.get('/:id/productos', async (req, res) => {
+  const { id } = req.params;
+  const carrito = await containerCarrito.getById(id);
+  res.json(carrito);
+})
+
+routerCarrito.delete('/:id', async (req, res) => {
+  const {id} = req.params;
+  const carritoDelete = await containerCarrito.deleteObject(id);
+  res.json({ success:'ok',new:  carritoDelete});
+});
+

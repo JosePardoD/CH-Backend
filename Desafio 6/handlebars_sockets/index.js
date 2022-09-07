@@ -6,19 +6,13 @@ const app = express();
 const { engine } = require('express-handlebars');
 const PORT = 8080;
 const httpServer = require('http').createServer(app);
-const io = require("socket.io")(server)(httpServer,{
+const io = require("socket.io")(httpServer,{
   cors:{origin:"*"},
 });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static(__dirname + '/public'));
-
-server.on('error', (error) => console.log(`Error en servidor ${error}`));
-
-
-
-
 app.set('view engine', 'hbs'); 
 app.set('views', './views');  
 app.engine(
@@ -52,7 +46,7 @@ io.on('connection', (socket) => {
     io.sockets.emit("chat",chat);
   });
 
-  socket.on('addProduct', (data) => {
+  socket.on('addProduct', async(data) => {
     const saveProducts = await container.save(data)
     const products = await container.getAll()
     io.sockets.emit("products",products);
@@ -76,6 +70,6 @@ app.post('/products', async (req,res)=>{
   res.redirect('/products')
 })
 
-const server = app.listen(PORT, () => {
-  console.log(`Servidor http escuchando en el puerto ${server.address().port}`);
+httpServer.listen(PORT, () => {
+  console.log(`Servidor http escuchando en el puerto `);
 });
