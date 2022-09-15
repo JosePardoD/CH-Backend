@@ -1,5 +1,12 @@
-const contenedor = require('./Contenedor.js')
+const contenedor = require('./Contenedor.js');
+const { options: sqlite } = require("./bd/sqlite");
+/*
 const container = new contenedor('products')
+*/
+
+const container = new contenedor(sqlite, "products");
+
+
 
 const express = require('express');
 const app = express();
@@ -36,11 +43,7 @@ let chat=[
   }
 ];
 
-let productsHC = [
-  { id: 1, title: 'nike ball', price: 101, thumbnail: 'http://localhost:8080/public/nike-ball.jpg' },
-  { id: 2, title: 'nike shoes', price: 102, thumbnail: 'http://localhost:8080/public/nike-shoes.jpg' },
-  { id: 3, title: 'adidas shoes', price: 102, thumbnail: 'http://localhost:8080/public/adidas-shoes.jpg' },
-];
+
 
 app.get('/form', (req, res) => {
   res.render('formulario');
@@ -66,8 +69,6 @@ io.on('connection',  async(socket) => {
 
 
 });
-
-
 
 
 

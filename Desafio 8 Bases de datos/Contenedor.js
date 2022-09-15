@@ -2,90 +2,54 @@ const fs = require("fs")
 
 class contenedor{
 
-    constructor(nombreArchivo){
-        this.nombreArchivo= "./"+nombreArchivo+".json";
+    constructor(options,nombreTabla){
+        this.knex = require("knex")(options);
+        this.tabla = nombreTabla;
     }
 
-    async getData(){
-        try {
-            return  await fs.promises.readFile(this.nombreArchivo,"utf8")    
-        } catch (error){
-            if(error.code == "ENOENT"){
-                fs.writeFile(this.nombreArchivo,"[]",(error)=>{
-                    if(error){
-                        console.log("El archivo no se pudo crear");
-                    }
-                })
-            }
-        }
-        
-    }
 
     async getAll(){
-        const data= await this.getData();
-        return JSON.parse(data);
+        try {
+            const data= await this.knex(this.tabla).select("*");
+            return data;
+        } catch (error) {
+            console.log(error); 
+        } finally{
+            this.knex.destroy();
+        }
+        
+
+        
     }
 
     async save(objeto){
         try {
-        let contenidoObjeto=await this.getData();
-        let contenidoObjetoJson=JSON.parse(contenidoObjeto);
-        let arreglo = [];
-        const indice =contenidoObjetoJson.map(x=>x.id).sort();
-        objeto.id=indice[indice.length-1]+1;
-
-        if(!objeto.id){
-            objeto.id=1
-            arreglo=[{...objeto}];
-            await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(arreglo));
-            return arreglo[0].id;
-        }
-
-        contenidoObjetoJson.push(objeto);
-        
-
-        await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(contenidoObjetoJson));
+        let contenidoObjeto=await this.knex(this.tabla).insert(objeto);
+        return contenidoObjeto;
 
     } catch (error) {
-            console.log("No se pudo grabar el archivo");
+            console.log(error);
+    } finally{
+        this.knex.destroy;
     }
     }
 
     async getById(numero){
         try{
-        let contenidoObjeto=await this.getData();
-        let contenidoObjetoJson=JSON.parse(contenidoObjeto);
-        
-        const indice =contenidoObjetoJson.map(x=>x.id);
-        const arreglo = Object.values(indice);
-        const maxId = Math.max(...arreglo)
-        let y=1; //bandera
-        
-
-        if(maxId>=numero){ 
-            for (let i = 0 ;i< indice.length;i++){
-                if (indice[i]==numero) {
-                    y=0;
-                    console.log(contenidoObjetoJson[i]);
-                    i=indice.length;
-                    
-                }        
-            }
-        }
-        if(y==1){
-            console.log(null);  
-        }
-
-
+        let contenidoObjeto=await this.knex(this,this.tabla).where("id",id);
         } catch (error) {
-            console.log("No se encontro");   
+            console.log(error);   
+        } finally{
+            this.knex.destroy();
         }
     }
-    async deleteAll(numero){
+    async deleteAll(){
         try {
-            return  await fs.promises.writeFile(this.nombreArchivo,"")    
+            let contenidoObjeto=await this.knex(this,this.tabla).del();
         } catch (error){
             console.log("No se borro");
+        }finally{
+            this.knex.destroy()
         }
     
     }

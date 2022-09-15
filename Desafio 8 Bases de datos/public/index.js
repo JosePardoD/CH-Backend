@@ -26,7 +26,7 @@ socket.on("products", (data) => {
         
         <tr>
             <td>${element.id}</td>
-            <td>${element.name}</td>
+            <td>${element.title}</td>
             <td>${element.price}</td>
             <td><img src=${element.thumbnail}></td>
         </tr>
