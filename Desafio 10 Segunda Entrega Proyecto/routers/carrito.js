@@ -1,5 +1,5 @@
 const express = require('express')
-const {carritoMongoDB: Carrito} = require('../daos/mainDaos')
+const {carritoFireBase: Carrito} = require('../daos/mainDaos')
 const routerCarrito = express.Router()
 
 const Carro = new Carrito()

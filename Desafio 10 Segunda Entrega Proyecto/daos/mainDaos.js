@@ -1,6 +1,6 @@
-const carritoDaos = require('./carritoDaos')
+const carritoFireBase= require('./carritoFireBase')
 const carritoMongoDB = require('./carritoMongoDB')
-const productosDaos = require('./productoDaos')
+const productosMongoDB = require('./productoMongoDB')
 const productosFireBase = require('./productoFireBase')
 
-module.exports = {carritoMongoDB, productosFireBase}
+module.exports = {carritoFireBase, productosFireBase}

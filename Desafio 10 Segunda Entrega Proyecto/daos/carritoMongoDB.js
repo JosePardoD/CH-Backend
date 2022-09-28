@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongoose')
 const mongoose = require('mongoose')
 const esquemaCar = require('./modelsMDB/schemaCarritos')
-const Producto = require('./productoDaos')
+const Producto = require('./productoMongoDB')
 const Productos = new Producto()
 
 

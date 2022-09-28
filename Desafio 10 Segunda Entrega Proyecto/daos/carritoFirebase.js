@@ -1,16 +1,18 @@
 const admin = require('firebase-admin')
 const config= require('./bd/carrito-firebase-firebase-adminsdk-be4wo-fe822dd5a0.json')
-const Producto = require('./productoDaos')
+const Producto = require('./productoFireBase')
 
 
 const Productos = new Producto()
 
 class Carrito {
     constructor() {
-        admin.initializeApp({
-            credential: admin.credential.cert(config),
-            databaseURL: 'https://proyec-b9050.firebaseio.com'
-        })
+        if (!admin.apps.length) {
+            admin.initializeApp({
+                credential: admin.credential.cert(config),
+                databaseURL: 'https://proyec-b9050.firebaseio.com'
+            })
+    }
     }
 
     async newCarrito() {
