@@ -2,15 +2,15 @@ const fs = require("fs")
 
 class contenedor{
 
-    constructor(options,nombreTabla){
+    constructor(options,nombretable){
         this.knex = require("knex")(options);
-        this.tabla = nombreTabla;
+        this.table = nombretable;
     }
 
 
     async getAll(){
         try {
-            const data= await this.knex(this.tabla).select("*");
+            const data= await this.knex(this.table).select("*");
             return data;
         } catch (error) {
             console.log(error); 
@@ -24,7 +24,7 @@ class contenedor{
 
     async save(objeto){
         try {
-        let contenidoObjeto=await this.knex(this.tabla).insert(objeto);
+        let contenidoObjeto=await this.knex(this.table).insert(objeto);
         return contenidoObjeto;
 
     } catch (error) {
@@ -36,7 +36,7 @@ class contenedor{
 
     async getById(numero){
         try{
-        let contenidoObjeto=await this.knex(this,this.tabla).where("id",id);
+        let contenidoObjeto=await this.knex(this,this.table).where("id",id);
         } catch (error) {
             console.log(error);   
         } finally{
@@ -45,7 +45,7 @@ class contenedor{
     }
     async deleteAll(){
         try {
-            let contenidoObjeto=await this.knex(this,this.tabla).del();
+            let contenidoObjeto=await this.knex(this,this.table).del();
         } catch (error){
             console.log("No se borro");
         }finally{
