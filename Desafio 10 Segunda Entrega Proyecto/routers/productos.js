@@ -1,5 +1,5 @@
 const express = require('express')
-const {productosFireBase: Producto} = require('../daos/mainDaos')
+const {productosMongoDB: Producto} = require('../daos/mainDaos')
 const routerProductos = express.Router()
 
 
@@ -121,6 +121,7 @@ routerProductos.delete('/:id', function(req, res, next){
     }
 }, async (req, res) => { 
     const num = req.params.id
+    console.log(num)
     try {
         
         const prod = new Producto()

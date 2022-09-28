@@ -1,7 +1,8 @@
 const { ObjectId } = require('mongoose')
 const mongoose = require('mongoose')
 const esquemaCar = require('./modelsMDB/schemaCarritos')
-const Producto = require('./productoMongoDB')
+
+const Producto = require('./productoDaos')
 const Productos = new Producto()
 
 
@@ -91,11 +92,6 @@ class Carrito {
             throw Error(error.message)
         }
     }
-
-
-
-
-
 }
 
 module.exports = Carrito

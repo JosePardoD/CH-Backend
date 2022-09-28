@@ -11,4 +11,10 @@ const esquemaProducto = new mongoose.Schema({
     time: {type: String, require: false}
 })
 
+
+
+
+
+
+
 module.exports = mongoose.model('productos', esquemaProducto)
